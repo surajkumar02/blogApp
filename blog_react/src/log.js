@@ -1,7 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import Home from './home'
-import { findLastIndex } from 'lodash'
+
 
 export default class Log extends React.Component{
     constructor(props){
@@ -9,53 +8,273 @@ export default class Log extends React.Component{
 
         this.state={
             name:null,
-            email:null,
             password:null,
-            guest:false,
-            login:false,
-            signup:false,
-            flag:false
-        }
+            demo:null,
+            blog:[],
+            refresh:null,
+            access:null,
+            user:null,
+            blog1:null,
+            one:false,
+            credentials:{
+
+            }
+         }
     }
-    componen(){
-        this.setState({flag:!this.state.flag})
+    
+    componentWillMount(){
+        this.setState({one:false})
+        axios({
+
+            method: 'get',
+
+            url: 'http://127.0.0.1:8000/blogs/',
+
+            headers: {
+
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${this.state.access}`
+
+            },
+
+            data: {
+                
+            }
+        })
+        .then(response=>this.setState({blog:response.data,login:true}))
+        .catch(err=>axios({
+
+            method: 'get',
+
+            url: 'http://127.0.0.1:8000/blogs/',
+
+            headers: {
+
+                'Content-Type': 'application/json',
+            },
+
+            data: {
+               refresh:this.state.refresh 
+            }
+        })
+        ).then(response=>this.setState({user:response.data.user,access:response.data.access,refresh:response.data.refresh,login:true}))
+        .then()
+    }
+    
+
+    logIn(e){
+        e.preventDefault()
+        axios({
+
+            method: 'post',
+
+            url: 'http://127.0.0.1:8000/login/',
+
+            headers: {
+
+                'Content-Type': 'application/json'
+
+            },
+
+            data: {
+                username:this.state.name,
+                password:this.state.password
+            }
+            
+            // JSON.stringify({
+            //     username:e.target['name'].value,
+            //     password:e.target['password'].value})
+        
+
+        })
+        .then(response=>this.setState({user:response.data.user,access:response.data.access,refresh:response.data.refresh,login:true}))
+        //.then(response=>this.setState({login:true}))
+        .catch(err=>alert(err.data))
     }
 
-    logIn(email,password){
-        axios.post()
+    handleSubmit(e){
+        e.preventDefault()
+             
+        axios({
+
+            method: 'post',
+
+            url: 'http://127.0.0.1:8000/login/',
+
+            headers: {
+
+                'Content-Type': 'application/json'
+
+            },
+
+            data: JSON.stringify({
+                username:e.target['name'].value,
+                password:e.target['password'].value})
+        
+
+        })
+        .then(response=>console.log(response.data))
+        .then(response=>this.setState({user:response.data.user,access:response.data.access,refresh:response.data.refresh}))
+        .catch(err=>console.log("Please Enter Valid Credentials (User Not Found)"))
+    
+    }
+    myPost(){
+        
+        this.setState({one:true})
+        
+        axios.get('http://127.0.0.1:8000/blog/',{
+            headers:{
+                'Authorization': `Bearer ${this.state.access}`,
+            }
+        })
+        // ({
+
+        //     method: 'get',
+
+        //     url: 'http://127.0.0.1:8000/blog/',
+        //     data: {
+        //         user:this.state.user,
+        //     },
+            
+        //     headers: {
+
+        //         'Content-Type': 'application/json',
+        //         'Authorization': `Bearer ${this.state.access}`
+
+        //     }
+        
+
+        // }).then(response=>console.log(response.data))
+            //{blog1:response.data,login:true}))
+        .catch(err=>console.log(
+            "data is not available"
+        ))
     }
 
+    allPost(e){
+        e.preventDefault()
+        this.setState({one:false})
+        axios({
 
-    signUp(name,email,password){
-        axios.post()
+            method: 'get',
+
+            url: 'http://127.0.0.1:8000/blogs/',
+
+            headers: {
+
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${this.state.access}`
+
+            },
+
+            data: {
+                
+            }
+        })
+        .then(response=>this.setState({blog:response.data,login:true}))
+        .catch(err=>console.log(
+            "data is not available"
+        ))
     }
+
+    post(e){
+        e.preventDefault()
+        axios.post('http://localhost:8000/blogs/',         
+            {
+                user:this.state.user,
+                username:this.state.name,
+                blog:this.state.data
+            },{
+            headers:{
+                'Authorization':`Bearer ${this.state.access}`
+            }
+            }
+            ).then(response=>this.setState({blog:response.data,login:true}))
+            .catch(err=>console.log(err.data))
+
+    }
+
+    edit(ind){
+        axios({
+
+            method: 'put',
+
+            url: `http://127.0.0.1:8000/blog/${ind}`,
+
+            headers: {
+
+                'Content-Type': 'application/json',
+                
+                'Authorization':`Bearer ${this.state.access}`
+                
+
+            },
+
+            data: {
+                blog:this.state.value,
+                liked:this.state.liked
+            }
+        }).then(response=>console.log(response.data))
+
+    }
+
+    delete(ind){
+        axios({
+
+            method: 'delete',
+
+            url: `http://127.0.0.1:8000/blog/${ind}`,
+
+            headers: {
+
+                'Content-Type': 'application/json',
+                
+                'Authorization':`Bearer ${this.state.access}`
+
+            },
+
+        }).then(response=>console.log(response.data))
+        .catch(err=>console.log(err.data))
+
+    }
+
 
     render(){
-        const {blog}=this.props
         return (
             <div>
-                <button className="btn-warning" onClick={()=>this.setState({guest:!this.state.flag,login:false,signup:false})} type="button">Guest</button>
-            &nbsp;&nbsp;
-                <button className="btn-success" onClick={()=>this.setState({login:!this.state.flag,signup:false})} type="button">Login</button>
-            &nbsp;&nbsp;
-            <button className="btn-primary" onClick={()=>this.setState({signup:!this.state.flag,login:false,guest:false})} type="button">Signup</button>
-            <br/><br/>  
-            {this.state.login && <form>
-                
-                <input type="email"  onChange={(e)=>this.setState({email:e.target.value})} placeholder="Recipient's Email" required/><br/>
-                <input type="password"  onChange={(e)=>this.setState({password:e.target.value})} placeholder="Recipient's Password" required/><br/><br/>
-                <button type="submit">Submit</button>
-                </form> }
-         
-           {this.state.signup && <form>
-                
-            <input type="text"  onChange={(e)=>this.setState({name:e.target.value})} placeholder="Recipient's username" required/><br/>
-            <input type="email"  onChange={(e)=>this.setState({email:e.target.value})} placeholder="Recipient's Email"/><br/>
-            <input type="password"  onChange={(e)=>this.setState({password:e.target.value})} placeholder="Recipient's Password"/><br/><br/>
-            <button type="submit">Submit</button>
-            </form>}
+                {this.state.access}{this.state.refresh}
+             {!this.state.login &&   <form onSubmit={this.handleSubmit}> 
+                <input type="text" onChange={(e)=>this.setState({name:e.target.value})} placeholder="Recipient's username" required/><br/>
+                <input type="password" onChange={(e)=>this.setState({password:e.target.value})} placeholder="Recipient's Password" required/><br/><br/>
+                <button type='reset' onClick={(e)=>this.logIn(e)}>Submit</button>
+                </form>}
 
-            {this.state.guest && <Home blogs={blog}/> }
+             { this.state.login && <div className="m-4, b-1">
+                <textarea type='text' className='form-control' rows='4' onChange={(e)=>this.setState({data:e.target.value})} placeholder="Input blog"/>
+                <br/>
+                <button type='submit' onClick={()=>this.post()}>Post</button>
+                <div></div>
+                <br/>
+                <button onClick={this.myPost}>MyPost</button>
+                <button onClick={(e)=>this.allPost(e)}>AllPost</button>
+                {/* {this.state.one && <div> {this.state.blog1.map((item,ind)=>
+                <li className='b-4' key={ind}>{item.blog} <br/>
+                <input key={ind} type='checkbox' value={false} onClick={(e)=>this.setState({liked:!this.state.liked})}/>
+                <button type='submit' onClick={()=>this.edit(item.blog_id)}>Edit</button>
+                <button type='submit' onClick={()=>this.delete(item.blog_id)}>Delete</button>
+                 </li>)}</div>} */}
+
+                 {!this.state.one && 
+                 <div className='container'> 
+                    <div className='rows'>
+                     {this.state.blog.map((item,ind)=>
+                        <li className='b-4' key={ind}>{item.blog} <br/>
+                        <input key={ind} type='checkbox' value={false} onClick={(e)=>this.setState({liked:!this.state.liked})}/>
+                        </li>)}
+                    </div>
+                </div>}
+                </div>
+            }
             </div>
 
 
