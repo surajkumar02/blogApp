@@ -33,7 +33,6 @@ export default class Blog extends React.Component{
           <BrowserRouter>
           <Header /> <br/>
             <Switch>
-              <Route path='/guest' render={()=> <Guest blogs={this.state.blog} />} />
               <Route path='/login' component={Log} />
               <Route path='/signup' component={Signup} />
               <Route path='/demo' component={Demo} />

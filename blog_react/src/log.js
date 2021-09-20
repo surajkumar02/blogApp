@@ -152,7 +152,7 @@ export default class Log extends React.Component{
     }
 
     allPost(e){
-        e.preventDefault()
+       
         this.setState({one:false})
         axios({
 
@@ -178,7 +178,6 @@ export default class Log extends React.Component{
     }
 
     post(e){
-        e.preventDefault()
         axios.post('http://localhost:8000/blogs/',         
             {
                 user:this.state.user,
@@ -189,7 +188,7 @@ export default class Log extends React.Component{
                 'Authorization':`Bearer ${this.state.access}`
             }
             }
-            ).then(response=>this.setState({blog:response.data,login:true}))
+            ).then(response=>this.setState({login:true}))
             .catch(err=>console.log(err.data))
 
     }
@@ -242,7 +241,7 @@ export default class Log extends React.Component{
     render(){
         return (
             <div>
-                {this.state.access}{this.state.refresh}
+
              {!this.state.login &&   <form onSubmit={this.handleSubmit}> 
                 <input type="text" onChange={(e)=>this.setState({name:e.target.value})} placeholder="Recipient's username" required/><br/>
                 <input type="password" onChange={(e)=>this.setState({password:e.target.value})} placeholder="Recipient's Password" required/><br/><br/>
@@ -250,27 +249,29 @@ export default class Log extends React.Component{
                 </form>}
 
              { this.state.login && <div className="m-4, b-1">
-                <textarea type='text' className='form-control' rows='4' onChange={(e)=>this.setState({data:e.target.value})} placeholder="Input blog"/>
+                <textarea type='text'value={this.state.data} className='form-control' rows='2' onChange={(e)=>this.setState({data:e.target.value})} placeholder="Input blog"/>
                 <br/>
                 <button type='submit' onClick={()=>this.post()}>Post</button>
                 <div></div>
                 <br/>
                 <button onClick={this.myPost}>MyPost</button>
                 <button onClick={(e)=>this.allPost(e)}>AllPost</button>
-                {/* {this.state.one && <div> {this.state.blog1.map((item,ind)=>
-                <li className='b-4' key={ind}>{item.blog} <br/>
+                <button onClick={()=>this.setState({access:null,refresh:null,blog:null,login:false})}>Log Out</button>
+                <br/> <br/>
+                {this.state.one && <div> {this.state.blog1.map((item,ind)=>
+                <div className='b-4' key={ind}>{item.blog} <br/>
                 <input key={ind} type='checkbox' value={false} onClick={(e)=>this.setState({liked:!this.state.liked})}/>
                 <button type='submit' onClick={()=>this.edit(item.blog_id)}>Edit</button>
                 <button type='submit' onClick={()=>this.delete(item.blog_id)}>Delete</button>
-                 </li>)}</div>} */}
+                 </div>)}</div>}
 
                  {!this.state.one && 
                  <div className='container'> 
-                    <div className='rows'>
+                    <div className='row m-4'>
                      {this.state.blog.map((item,ind)=>
-                        <li className='b-4' key={ind}>{item.blog} <br/>
+                        <span className="col m-4 p-2 border" key={ind}>{item.blog} <br/>
                         <input key={ind} type='checkbox' value={false} onClick={(e)=>this.setState({liked:!this.state.liked})}/>
-                        </li>)}
+                        </span>)}
                     </div>
                 </div>}
                 </div>
