@@ -262,9 +262,13 @@ export default class Log extends React.Component{
                     <div className='row m-4'>
                     {this.state.blog.filter((items)=>(items.username===this.state.name)).map((item,ind)=>
                     <div className="col m-4 p-2 border" key={ind}>{item.blog} <br/>
-                    <input key={ind} type='checkbox' value={false} onClick={(e)=>this.setState({liked:!this.state.liked})}/>
+                    <div>
+                    <input key={ind} type='checkbox' value={false} onClick={(e)=>this.setState({liked:!this.state.liked})}/> 
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <button type='submit' onClick={()=>this.edit(item.blog_id)}>Edit</button>
+                    &nbsp;&nbsp;&nbsp;
                     <button type='submit' onClick={()=>this.delete(item.blog_id)}>Delete</button>
+                    </div>
                     </div>)}
                     </div>
                  </div>}
