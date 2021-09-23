@@ -197,7 +197,7 @@ export default class Log extends React.Component{
 
             method: 'put',
 
-            url: `http://127.0.0.1:8000/blog/${ind}`,
+            url: `http://127.0.0.1:8000/blog/${ind}/`,
 
             headers: {
 
