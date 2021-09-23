@@ -210,7 +210,9 @@ export default class Log extends React.Component{
 
             data: {
                 blog:this.state.value,
-                liked:this.state.liked
+                like:this.state.liked,
+                username:this.state.name,
+                user:this.state.user
             }
         }).then(response=>console.log(response.data))
 
@@ -221,7 +223,7 @@ export default class Log extends React.Component{
 
             method: 'delete',
 
-            url: `http://127.0.0.1:8000/blog/${ind}`,
+            url: `http://127.0.0.1:8000/blog/${ind}/`,
 
             headers: {
 
